@@ -1,48 +1,38 @@
 import requests
 
+
 class ApiClient:
-    def __init__(self, base_url: str, bearer_token: str):
+    def __init__(self, base_url: str, token_getter):
         self.base_url = base_url.rstrip('/')
-        self.bearer_token = bearer_token
+        self.token_getter = token_getter
 
     def _headers(self) -> dict:
         return {
-            'Authorization': f'Bearer {self.bearer_token}',
+            'Authorization': f'Bearer {self.token_getter()}',
             'Content-Type': 'application/json',
         }
 
-    def _handle_response(self, resp: requests.Response):
-        if resp.status_code == 401:
-            raise PermissionError('Bearer token rejected (401). Update config.json and restart.')
-        resp.raise_for_status()
-        if resp.content:
-            return resp.json()
-        return None
-
-    def get(self, path: str):
+    def _request(self, method, path, **kwargs):
+        url = f'{self.base_url}{path}'
         try:
-            resp = requests.get(f'{self.base_url}{path}', headers=self._headers(), timeout=10)
-            return self._handle_response(resp)
+            resp = method(url, headers=self._headers(), timeout=10, **kwargs)
+            if resp.status_code == 401:
+                resp = method(url, headers=self._headers(), timeout=10, **kwargs)
+                if resp.status_code == 401:
+                    raise PermissionError('Authentication failed after token refresh.')
+            resp.raise_for_status()
+            return resp.json() if resp.content else None
         except requests.exceptions.ConnectionError as e:
             raise ConnectionError(f'Cannot reach backend at {self.base_url}: {e}')
 
+    def get(self, path: str):
+        return self._request(requests.get, path)
+
     def post(self, path: str, body: dict):
-        try:
-            resp = requests.post(f'{self.base_url}{path}', headers=self._headers(), json=body, timeout=10)
-            return self._handle_response(resp)
-        except requests.exceptions.ConnectionError as e:
-            raise ConnectionError(f'Cannot reach backend: {e}')
+        return self._request(requests.post, path, json=body)
 
     def put(self, path: str, body: dict):
-        try:
-            resp = requests.put(f'{self.base_url}{path}', headers=self._headers(), json=body, timeout=10)
-            return self._handle_response(resp)
-        except requests.exceptions.ConnectionError as e:
-            raise ConnectionError(f'Cannot reach backend: {e}')
+        return self._request(requests.put, path, json=body)
 
     def delete(self, path: str):
-        try:
-            resp = requests.delete(f'{self.base_url}{path}', headers=self._headers(), timeout=10)
-            return self._handle_response(resp)
-        except requests.exceptions.ConnectionError as e:
-            raise ConnectionError(f'Cannot reach backend: {e}')
+        return self._request(requests.delete, path)
