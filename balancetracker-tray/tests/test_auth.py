@@ -20,6 +20,14 @@ class TestGetIdToken(unittest.TestCase):
             mock_creds.refresh.assert_called_once()
             self.assertEqual(result, 'eyJfakeIdToken')
 
+    def test_raises_value_error_when_id_token_is_none(self):
+        mock_creds = MagicMock()
+        mock_creds.id_token = None
+        with patch('auth.Credentials', return_value=mock_creds), \
+             patch('auth.Request'):
+            with self.assertRaises(ValueError):
+                auth.get_id_token(CONFIG)
+
 class TestEnsureAuthenticated(unittest.TestCase):
     def test_skips_flow_when_refresh_token_present(self):
         with patch('auth.run_oauth_flow') as mock_flow:
@@ -34,6 +42,17 @@ class TestEnsureAuthenticated(unittest.TestCase):
             result = auth.ensure_authenticated(config)
             mock_flow.assert_called_once_with(config)
             self.assertEqual(result['refresh_token'], 'brand-new-token')
+
+class TestRunOauthFlow(unittest.TestCase):
+    def test_raises_runtime_error_when_refresh_token_is_none(self):
+        mock_creds = MagicMock()
+        mock_creds.refresh_token = None
+        mock_flow = MagicMock()
+        mock_flow.run_local_server.return_value = mock_creds
+        with patch('auth.InstalledAppFlow') as mock_flow_cls:
+            mock_flow_cls.from_client_config.return_value = mock_flow
+            with self.assertRaises(RuntimeError):
+                auth.run_oauth_flow(dict(CONFIG))
 
 if __name__ == '__main__':
     unittest.main()
