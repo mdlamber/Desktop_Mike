@@ -12,7 +12,8 @@ echo ""
 echo "--- Checking system dependencies ---"
 MISSING=()
 python3 -c "import gi" 2>/dev/null || MISSING+=("python3-gobject")
-pkg-config --exists ayatana-appindicator3-0.1 2>/dev/null || \
+ls /usr/lib64/girepository-1.0/AyatanaAppIndicator3-0.1.typelib 2>/dev/null || \
+  pkg-config --exists ayatana-appindicator3-0.1 2>/dev/null || \
   pkg-config --exists appindicator3-0.1 2>/dev/null || MISSING+=("libayatana-appindicator-gtk3")
 
 if [ ${#MISSING[@]} -gt 0 ]; then
