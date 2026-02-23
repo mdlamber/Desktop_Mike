@@ -15,7 +15,8 @@ from panels.notes import NotesPanel
 from panels.chat import ChatPanel
 
 class TrayWindow(Gtk.Window):
-    def __init__(self):
+    def __init__(self, token_getter):
+        self.token_getter = token_getter
         super().__init__(type=Gtk.WindowType.TOPLEVEL)
         self.config = load_config()
         self._setup_window()
@@ -60,7 +61,7 @@ class TrayWindow(Gtk.Window):
     def _setup_api(self):
         client = ApiClient(
             base_url=self.config.get('backend_url', 'http://localhost:3000'),
-            bearer_token=self.config.get('bearer_token', ''),
+            token_getter=self.token_getter,
         )
         self.tasks_api = TasksApi(client)
         self.notes_api = NotesApi(client)
