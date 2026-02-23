@@ -1,3 +1,5 @@
+# Run with: .venv/bin/python3 -m unittest tests/test_auth.py
+# Requires google-auth installed in project venv (see requirements.txt)
 import sys, os, unittest
 from unittest.mock import MagicMock, patch
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))

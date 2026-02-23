@@ -26,6 +26,7 @@ def main():
             print('Google OAuth credentials required. Exiting.')
             sys.exit(1)
 
+    # Collect Anthropic key before OAuth so all dialogs appear before browser opens
     if not config.get('anthropic_api_key'):
         _show_anthropic_dialog(config)
 
