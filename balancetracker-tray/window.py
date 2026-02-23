@@ -16,8 +16,8 @@ from panels.chat import ChatPanel
 
 class TrayWindow(Gtk.Window):
     def __init__(self, token_getter):
-        self.token_getter = token_getter
         super().__init__(type=Gtk.WindowType.TOPLEVEL)
+        self.token_getter = token_getter
         self.config = load_config()
         self._setup_window()
         self._setup_transparency()
