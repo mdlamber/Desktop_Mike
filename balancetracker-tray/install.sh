@@ -30,8 +30,17 @@ python3 -m venv "$SCRIPT_DIR/.venv"
 "$SCRIPT_DIR/.venv/bin/pip" install --quiet -r "$SCRIPT_DIR/requirements.txt"
 echo "venv ready at $SCRIPT_DIR/.venv"
 
-# 3. Install systemd user service
+# OAuth prerequisite — must complete before starting the service
 echo ""
+echo "IMPORTANT: Before starting the app, add http://localhost to your OAuth client's"
+echo "Authorized redirect URIs at:"
+echo "  https://console.cloud.google.com/apis/credentials"
+echo ""
+echo "On first launch a browser window will open for Google sign-in."
+echo "After you sign in, the tray app starts automatically."
+echo ""
+
+# 3. Install systemd user service
 echo "--- Installing systemd user service ---"
 mkdir -p "$SERVICE_DIR"
 VENV_PYTHON="$SCRIPT_DIR/.venv/bin/python3"
@@ -42,8 +51,7 @@ sed \
 
 systemctl --user daemon-reload
 systemctl --user enable "$SERVICE_NAME"
-systemctl --user start "$SERVICE_NAME"
-echo "Service enabled and started."
+echo "Service enabled (not started yet — start it after completing OAuth setup above)."
 
 # 4. Check for AppIndicator GNOME extension
 echo ""
@@ -60,17 +68,9 @@ else
 fi
 
 echo ""
-echo "Done! The tray app is now running."
-echo "Config file: $HOME/.config/balancetracker-tray/config.json"
+echo "Done! Run the app with:"
+echo "  systemctl --user start balancetracker-tray"
 echo ""
 echo "To check status:  systemctl --user status balancetracker-tray"
 echo "To view logs:     journalctl --user -u balancetracker-tray -f"
 echo "To restart:       systemctl --user restart balancetracker-tray"
-
-echo ""
-echo "IMPORTANT: Before first run, add http://localhost to your OAuth client's"
-echo "Authorized redirect URIs at:"
-echo "  https://console.cloud.google.com/apis/credentials"
-echo ""
-echo "On first launch a browser window will open for Google sign-in."
-echo "After you sign in, the tray app starts automatically."
