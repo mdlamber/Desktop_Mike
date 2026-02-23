@@ -16,6 +16,11 @@ def get_id_token(config: dict) -> str:
         scopes=SCOPES,
     )
     creds.refresh(Request())
+    if not creds.id_token:
+        raise ValueError(
+            "Token refresh succeeded but no id_token was returned. "
+            "Ensure the 'openid' scope is requested."
+        )
     return creds.id_token
 
 
@@ -31,6 +36,11 @@ def run_oauth_flow(config: dict) -> dict:
     }
     flow = InstalledAppFlow.from_client_config(client_config, scopes=SCOPES)
     creds = flow.run_local_server(port=0, open_browser=True)
+    if not creds.refresh_token:
+        raise RuntimeError(
+            "OAuth flow completed but no refresh_token was issued. "
+            "Ensure 'offline' access is enabled for this OAuth client."
+        )
     config['refresh_token'] = creds.refresh_token
     return config
 
