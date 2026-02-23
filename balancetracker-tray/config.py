@@ -4,7 +4,9 @@ import os
 CONFIG_PATH = os.path.expanduser('~/.config/balancetracker-tray/config.json')
 
 DEFAULTS = {
-    'bearer_token': '',
+    'client_id': '',
+    'client_secret': '',
+    'refresh_token': '',
     'anthropic_api_key': '',
     'claude_model': 'claude-haiku-4-5-20251001',
     'backend_url': 'http://localhost:3000',
