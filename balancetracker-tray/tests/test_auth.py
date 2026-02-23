@@ -27,6 +27,7 @@ class TestGetIdToken(unittest.TestCase):
              patch('auth.Request'):
             with self.assertRaises(ValueError):
                 auth.get_id_token(CONFIG)
+        mock_creds.refresh.assert_called_once()
 
 class TestEnsureAuthenticated(unittest.TestCase):
     def test_skips_flow_when_refresh_token_present(self):
@@ -53,6 +54,7 @@ class TestRunOauthFlow(unittest.TestCase):
             mock_flow_cls.from_client_config.return_value = mock_flow
             with self.assertRaises(RuntimeError):
                 auth.run_oauth_flow(dict(CONFIG))
+        mock_flow.run_local_server.assert_called_once()
 
 if __name__ == '__main__':
     unittest.main()
