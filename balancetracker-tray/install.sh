@@ -26,7 +26,7 @@ echo "System dependencies OK."
 # 2. Create Python venv
 echo ""
 echo "--- Creating Python virtual environment ---"
-python3 -m venv "$SCRIPT_DIR/.venv"
+python3 -m venv --system-site-packages "$SCRIPT_DIR/.venv"
 "$SCRIPT_DIR/.venv/bin/pip" install --quiet --upgrade pip
 "$SCRIPT_DIR/.venv/bin/pip" install --quiet -r "$SCRIPT_DIR/requirements.txt"
 echo "venv ready at $SCRIPT_DIR/.venv"
