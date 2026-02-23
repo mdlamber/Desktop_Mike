@@ -1,0 +1,170 @@
+/* style.css — BalanceTracker Tray: dark translucent theme */
+
+* {
+    font-family: Monospace;
+    font-size: 9pt;
+    color: #cccccc;
+}
+
+window {
+    background-color: transparent;
+}
+
+/* Main content box — the translucent panel */
+.main-box {
+    background-color: rgba(10, 10, 10, 0.88);
+    border: 1px solid #00C853;
+    border-radius: 6px;
+    padding: 4px;
+}
+
+/* Notebook tabs */
+notebook tab {
+    background-color: rgba(20, 20, 20, 0.9);
+    padding: 4px 10px;
+    color: #888888;
+    border: none;
+}
+
+notebook tab:checked {
+    background-color: rgba(0, 200, 83, 0.15);
+    color: #00C853;
+    border-bottom: 2px solid #00C853;
+}
+
+/* Scrolled windows — transparent */
+scrolledwindow {
+    background-color: transparent;
+}
+
+viewport {
+    background-color: transparent;
+}
+
+/* Task rows */
+.task-row {
+    background-color: rgba(255, 255, 255, 0.04);
+    border-radius: 4px;
+    padding: 6px 8px;
+    margin: 2px 0;
+}
+
+.task-row:hover {
+    background-color: rgba(0, 200, 83, 0.08);
+}
+
+.task-subject {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+/* Status badges */
+.status-todo {
+    color: #888888;
+    font-size: 8pt;
+}
+
+.status-in_progress {
+    color: #FFD600;
+    font-size: 8pt;
+}
+
+.status-done {
+    color: #00C853;
+    font-size: 8pt;
+}
+
+/* Note rows */
+.note-row {
+    background-color: rgba(255, 255, 255, 0.04);
+    border-radius: 4px;
+    padding: 6px 8px;
+    margin: 2px 0;
+}
+
+.note-row:checked,
+.note-row:selected {
+    background-color: rgba(0, 200, 83, 0.15);
+    color: #00C853;
+}
+
+/* Chat messages */
+.chat-user {
+    color: #00C853;
+    text-align: right;
+    margin: 4px 0 4px 40px;
+    font-style: italic;
+}
+
+.chat-assistant {
+    color: #cccccc;
+    margin: 4px 40px 4px 0;
+}
+
+.chat-error {
+    color: #FF5252;
+    font-size: 8pt;
+}
+
+/* Inputs */
+entry {
+    background-color: rgba(255, 255, 255, 0.06);
+    border: 1px solid #333333;
+    border-radius: 3px;
+    color: #ffffff;
+    padding: 4px 6px;
+    caret-color: #00C853;
+}
+
+entry:focus {
+    border-color: #00C853;
+    box-shadow: 0 0 0 1px rgba(0, 200, 83, 0.3);
+}
+
+textview {
+    background-color: rgba(255, 255, 255, 0.04);
+    color: #cccccc;
+    border: 1px solid #222222;
+    border-radius: 3px;
+}
+
+textview:focus {
+    border-color: #00C853;
+}
+
+/* Buttons */
+button {
+    background-color: rgba(255, 255, 255, 0.06);
+    border: 1px solid #333333;
+    border-radius: 3px;
+    color: #cccccc;
+    padding: 3px 8px;
+    min-height: 0;
+}
+
+button:hover {
+    background-color: rgba(0, 200, 83, 0.15);
+    border-color: #00C853;
+    color: #00C853;
+}
+
+button.accent {
+    background-color: rgba(0, 200, 83, 0.2);
+    border-color: #00C853;
+    color: #00C853;
+}
+
+/* Error banner */
+.error-bar {
+    background-color: rgba(255, 82, 82, 0.2);
+    border: 1px solid #FF5252;
+    border-radius: 3px;
+    padding: 4px 8px;
+    color: #FF5252;
+    font-size: 8pt;
+}
+
+/* Separator */
+separator {
+    background-color: #222222;
+}
