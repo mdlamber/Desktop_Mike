@@ -40,6 +40,8 @@ class TestApiClient(unittest.TestCase):
         with patch('requests.get', side_effect=[fail_resp, ok_resp]) as mock_get:
             result = client.get('/tasks')
             self.assertEqual(mock_get.call_count, 2)
+            second_call_headers = mock_get.call_args_list[1][1]['headers']
+            self.assertEqual(second_call_headers['Authorization'], 'Bearer fresh-token')
             self.assertEqual(result, [])
 
     def test_401_twice_raises_permission_error(self):

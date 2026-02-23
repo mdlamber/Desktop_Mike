@@ -1,8 +1,9 @@
 import requests
+from typing import Callable
 
 
 class ApiClient:
-    def __init__(self, base_url: str, token_getter):
+    def __init__(self, base_url: str, token_getter: Callable[[], str]):
         self.base_url = base_url.rstrip('/')
         self.token_getter = token_getter
 
@@ -22,7 +23,7 @@ class ApiClient:
                     raise PermissionError('Authentication failed after token refresh.')
             resp.raise_for_status()
             return resp.json() if resp.content else None
-        except requests.exceptions.ConnectionError as e:
+        except requests.exceptions.RequestException as e:
             raise ConnectionError(f'Cannot reach backend at {self.base_url}: {e}')
 
     def get(self, path: str):
