@@ -12,13 +12,13 @@ from api.tasks import TasksApi
 from api.notes import NotesApi
 from panels.tasks import TasksPanel
 from panels.notes import NotesPanel
-from panels.chat import ChatPanel
 
 class TrayWindow(Gtk.Window):
     def __init__(self, token_getter):
         super().__init__(type=Gtk.WindowType.TOPLEVEL)
         self.token_getter = token_getter
         self.config = load_config()
+        self._shown_once = False
         self._setup_window()
         self._setup_transparency()
         self._setup_api()
@@ -28,21 +28,25 @@ class TrayWindow(Gtk.Window):
         self.connect('delete-event', lambda w, e: w.hide() or True)
 
     def _setup_window(self):
-        screen = Gdk.Screen.get_default()
-        sw = screen.get_width()
-        sh = screen.get_height()
-        # Size: width/4 * height/2 = width*height/8
-        w = sw // 4
-        h = sh // 2
+        display = Gdk.Display.get_default()
+        monitor = display.get_primary_monitor() or display.get_monitor(0)
+        geom = monitor.get_geometry()
+        self._mon_x = geom.x
+        self._mon_y = geom.y
+        self._mon_w = geom.width
+        self._mon_h = geom.height
+        w = self._mon_w // 4
+        h = self._mon_h // 2
+        self._win_w = w
+        self._win_h = h
         self.set_default_size(w, h)
         self.set_resizable(False)
         self.set_decorated(False)
         self.set_skip_taskbar_hint(True)
         self.set_skip_pager_hint(True)
         self.set_keep_above(True)
-        self.set_type_hint(Gdk.WindowTypeHint.UTILITY)
-        # Position: top-right, below the GNOME top bar (~30px)
-        self.move(sw - w - 8, 32)
+        self.set_type_hint(Gdk.WindowTypeHint.DOCK)
+        self.set_position(Gtk.WindowPosition.NONE)
 
     def _setup_transparency(self):
         screen = self.get_screen()
@@ -53,7 +57,7 @@ class TrayWindow(Gtk.Window):
         self.connect('draw', self._on_draw)
 
     def _on_draw(self, widget, cr):
-        cr.set_source_rgba(0.039, 0.039, 0.039, 0.88)
+        cr.set_source_rgba(0, 0, 0, 0)
         cr.set_operator(cairo.OPERATOR_SOURCE)
         cr.paint()
         cr.set_operator(cairo.OPERATOR_OVER)
@@ -79,10 +83,24 @@ class TrayWindow(Gtk.Window):
     def _build_ui(self):
         outer = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         outer.get_style_context().add_class('main-box')
-        outer.set_margin_start(4)
-        outer.set_margin_end(4)
-        outer.set_margin_top(4)
-        outer.set_margin_bottom(4)
+        outer.set_margin_start(0)
+        outer.set_margin_end(0)
+        outer.set_margin_top(0)
+        outer.set_margin_bottom(0)
+
+        # Top bar with title and quit button
+        top_bar = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=4)
+        title = Gtk.Label(label='BalanceTracker')
+        title.get_style_context().add_class('task-subject')
+        title.set_halign(Gtk.Align.START)
+        top_bar.pack_start(title, True, True, 4)
+
+        quit_btn = Gtk.Button(label='Quit')
+        quit_btn.get_style_context().add_class('flat-btn')
+        quit_btn.connect('clicked', lambda _: Gtk.main_quit())
+        top_bar.pack_end(quit_btn, False, False, 0)
+
+        outer.pack_start(top_bar, False, False, 4)
 
         notebook = Gtk.Notebook()
         notebook.set_tab_pos(Gtk.PositionType.TOP)
@@ -99,19 +117,11 @@ class TrayWindow(Gtk.Window):
         notes_panel.set_margin_top(6)
         notebook.append_page(notes_panel, Gtk.Label(label='Notes'))
 
-        chat_panel = ChatPanel(self.config)
-        chat_panel.set_margin_start(6)
-        chat_panel.set_margin_end(6)
-        chat_panel.set_margin_top(6)
-        notebook.append_page(chat_panel, Gtk.Label(label='Chat'))
-
-        # Refresh tasks/notes when their tab is switched to
         notebook.connect('switch-page', self._on_tab_switch,
                          tasks_panel, notes_panel)
 
         outer.pack_start(notebook, True, True, 0)
         self.add(outer)
-        self.show_all()
 
     def _on_tab_switch(self, notebook, page, page_num, tasks_panel, notes_panel):
         if page_num == 0:
@@ -128,5 +138,14 @@ class TrayWindow(Gtk.Window):
         if self.get_visible():
             self.hide()
         else:
-            self.show_all()
+            # Position top-right, below GNOME top bar
+            x = self._mon_x + self._mon_w - self._win_w - 8
+            y = self._mon_y + 32
+            self.move(x, y)
+            if not self._shown_once:
+                self.show_all()
+                self._shown_once = True
+            else:
+                self.show()
+            self.move(x, y)
             self.present()

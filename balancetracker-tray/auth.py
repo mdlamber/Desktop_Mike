@@ -2,7 +2,11 @@ from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 
-SCOPES = ['openid', 'email', 'profile']
+SCOPES = [
+    'openid',
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile',
+]
 TOKEN_URI = 'https://oauth2.googleapis.com/token'
 
 
@@ -35,7 +39,7 @@ def run_oauth_flow(config: dict) -> dict:
         }
     }
     flow = InstalledAppFlow.from_client_config(client_config, scopes=SCOPES)
-    creds = flow.run_local_server(port=0, open_browser=True)
+    creds = flow.run_local_server(port=8085, open_browser=True)
     if not creds.refresh_token:
         raise RuntimeError(
             "OAuth flow completed but no refresh_token was issued. "

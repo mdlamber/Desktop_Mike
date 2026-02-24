@@ -12,24 +12,48 @@ window {
 
 /* Main content box — the translucent panel */
 .main-box {
-    background-color: rgba(10, 10, 10, 0.88);
-    border: 1px solid #00C853;
-    border-radius: 6px;
+    background-color: rgba(10, 10, 10, 0.45);
+    border: none;
+    border-radius: 0;
     padding: 4px;
 }
 
+notebook, notebook header, notebook stack,
+list, row, box, frame, label {
+    background-color: transparent;
+}
+
+window notebook {
+    border: none;
+    box-shadow: none;
+}
+
+window notebook > header {
+    border: none;
+    box-shadow: none;
+}
+
+window notebook > stack {
+    border: none;
+    box-shadow: none;
+}
+
 /* Notebook tabs */
-notebook tab {
-    background-color: rgba(20, 20, 20, 0.9);
+window notebook tab {
+    background: rgba(20, 20, 20, 0.9);
+    background-image: none;
     padding: 4px 10px;
     color: #888888;
     border: none;
+    box-shadow: none;
 }
 
-notebook tab:checked {
-    background-color: rgba(0, 200, 83, 0.15);
-    color: #00C853;
-    border-bottom: 2px solid #00C853;
+window notebook tab:checked {
+    background: rgba(255, 255, 255, 0.1);
+    background-image: none;
+    color: #ffffff;
+    border: none;
+    box-shadow: none;
 }
 
 /* Scrolled windows — transparent */
@@ -50,7 +74,7 @@ viewport {
 }
 
 .task-row:hover {
-    background-color: rgba(0, 200, 83, 0.08);
+    background-color: rgba(255, 255, 255, 0.04);
 }
 
 .task-subject {
@@ -91,7 +115,7 @@ viewport {
 /* Chat messages */
 .chat-user {
     color: #00C853;
-    text-align: right;
+
     margin: 4px 0 4px 40px;
     font-style: italic;
 }
@@ -107,18 +131,20 @@ viewport {
 }
 
 /* Inputs */
-entry {
-    background-color: rgba(255, 255, 255, 0.06);
+window entry {
+    background: rgba(255, 255, 255, 0.06);
+    background-image: none;
     border: 1px solid #333333;
     border-radius: 3px;
     color: #ffffff;
     padding: 4px 6px;
     caret-color: #00C853;
+    box-shadow: none;
 }
 
-entry:focus {
-    border-color: #00C853;
-    box-shadow: 0 0 0 1px rgba(0, 200, 83, 0.3);
+window entry:focus {
+    border-color: #555555;
+    box-shadow: none;
 }
 
 textview {
@@ -133,19 +159,54 @@ textview:focus {
 }
 
 /* Buttons */
-button {
-    background-color: rgba(255, 255, 255, 0.06);
+window button {
+    background: rgba(255, 255, 255, 0.06);
+    background-image: none;
     border: 1px solid #333333;
     border-radius: 3px;
     color: #cccccc;
     padding: 3px 8px;
     min-height: 0;
+    box-shadow: none;
 }
 
-button:hover {
-    background-color: rgba(0, 200, 83, 0.15);
-    border-color: #00C853;
-    color: #00C853;
+window button:hover {
+    background: rgba(255, 255, 255, 0.08);
+    background-image: none;
+    border-color: #333333;
+    color: #cccccc;
+    box-shadow: none;
+}
+
+window button.task-summary,
+window button.task-summary:hover,
+window button.task-summary:active,
+window button.task-summary:focus {
+    background: transparent;
+    background-image: none;
+    border: none;
+    box-shadow: none;
+    color: #ffffff;
+}
+
+window button.flat-btn {
+    background: #000000;
+    background-image: none;
+    border: none;
+    box-shadow: none;
+    color: #ffffff;
+}
+
+window button.add-btn label {
+    font-size: 16pt;
+}
+
+window button.flat-btn:hover {
+    background: #333333;
+    background-image: none;
+    border: none;
+    box-shadow: none;
+    color: #ffffff;
 }
 
 button.accent {
@@ -162,6 +223,32 @@ button.accent {
     padding: 4px 8px;
     color: #FF5252;
     font-size: 8pt;
+}
+
+/* Combobox / dropdown */
+window combobox button {
+    background: #000000;
+    background-image: none;
+    border: none;
+    box-shadow: none;
+    color: #ffffff;
+}
+
+window combobox button:hover {
+    background: #333333;
+    background-image: none;
+}
+
+window combobox window, window combobox menu,
+window combobox menuitem {
+    background: #000000;
+    background-image: none;
+    color: #ffffff;
+}
+
+window combobox menuitem:hover {
+    background: #333333;
+    color: #ffffff;
 }
 
 /* Separator */

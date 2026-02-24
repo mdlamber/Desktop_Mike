@@ -7,8 +7,6 @@ DEFAULTS = {
     'client_id': '',
     'client_secret': '',
     'refresh_token': '',
-    'anthropic_api_key': '',
-    'claude_model': 'claude-haiku-4-5-20251001',
     'backend_url': 'http://localhost:3000',
 }
 

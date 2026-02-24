@@ -4,7 +4,7 @@ import config as cfg
 
 class TestConfig(unittest.TestCase):
     def test_load_valid_config(self):
-        data = {'client_id': 'cid', 'client_secret': 'cs', 'anthropic_api_key': 'sk-ant-xxx'}
+        data = {'client_id': 'cid', 'client_secret': 'cs', 'refresh_token': 'rt'}
         with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
             json.dump(data, f)
             path = f.name
@@ -12,8 +12,7 @@ class TestConfig(unittest.TestCase):
             result = cfg.load_config(path)
             self.assertEqual(result['client_id'], 'cid')
             self.assertEqual(result['client_secret'], 'cs')
-            self.assertEqual(result['anthropic_api_key'], 'sk-ant-xxx')
-            self.assertEqual(result['claude_model'], 'claude-haiku-4-5-20251001')
+            self.assertEqual(result['refresh_token'], 'rt')
         finally:
             os.unlink(path)
 
@@ -23,10 +22,9 @@ class TestConfig(unittest.TestCase):
         self.assertEqual(result['client_id'], '')
         self.assertEqual(result['client_secret'], '')
         self.assertEqual(result['refresh_token'], '')
-        self.assertEqual(result['anthropic_api_key'], '')
 
     def test_save_and_reload_roundtrip(self):
-        data = {'client_id': 'cid', 'refresh_token': 'rt', 'anthropic_api_key': 'key'}
+        data = {'client_id': 'cid', 'refresh_token': 'rt'}
         with tempfile.TemporaryDirectory() as tmpdir:
             path = os.path.join(tmpdir, 'sub', 'config.json')
             cfg.save_config(data, path)
