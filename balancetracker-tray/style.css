@@ -12,7 +12,7 @@ window {
 
 /* Main content box — the translucent panel */
 .main-box {
-    background-color: rgba(10, 10, 10, 0.45);
+    background-color: rgba(10, 10, 10, 0.85);
     border: none;
     border-radius: 0;
     padding: 4px;

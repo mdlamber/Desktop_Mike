@@ -46,15 +46,23 @@ class TasksPanel(Gtk.Box):
         # Error label (hidden by default)
         self.error_label = Gtk.Label(label='')
         self.error_label.get_style_context().add_class('error-bar')
+        self.error_label.set_no_show_all(True)
         self.pack_start(self.error_label, False, False, 0)
 
-        # Create form (hidden after first show)
+        # Create form (hidden by default)
         self.create_form = self._build_create_form()
+        self.create_form.set_no_show_all(True)
         self.pack_start(self.create_form, False, False, 0)
+
+        # Loading spinner
+        self.spinner = Gtk.Spinner()
+        self.spinner.start()
+        self.pack_start(self.spinner, False, False, 8)
 
         # Empty state label
         self.empty_label = Gtk.Label(label='No tasks yet. Click + to create one.')
         self.empty_label.set_opacity(0.5)
+        self.empty_label.set_no_show_all(True)
         self.pack_start(self.empty_label, False, False, 8)
 
         # Scrollable task list
@@ -126,6 +134,8 @@ class TasksPanel(Gtk.Box):
         self._run_async(self.tasks_api.get_all, on_success=self._on_tasks_loaded)
 
     def _on_tasks_loaded(self, tasks):
+        self.spinner.stop()
+        self.spinner.hide()
         self.tasks = tasks
         self._details = []
         for child in self.task_list.get_children():
