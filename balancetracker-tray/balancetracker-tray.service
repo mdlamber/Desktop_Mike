@@ -10,6 +10,7 @@ WorkingDirectory=APP_DIR_PLACEHOLDER
 Restart=on-failure
 RestartSec=5
 Environment=PYTHONUNBUFFERED=1
+Environment=GDK_BACKEND=x11
 
 [Install]
 WantedBy=graphical-session.target

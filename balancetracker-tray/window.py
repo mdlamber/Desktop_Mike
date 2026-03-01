@@ -45,8 +45,6 @@ class TrayWindow(Gtk.Window):
         self.set_skip_taskbar_hint(True)
         self.set_skip_pager_hint(True)
         self.set_keep_above(True)
-        self.set_type_hint(Gdk.WindowTypeHint.DOCK)
-        self.set_position(Gtk.WindowPosition.NONE)
 
     def _setup_transparency(self):
         screen = self.get_screen()
@@ -138,7 +136,6 @@ class TrayWindow(Gtk.Window):
         if self.get_visible():
             self.hide()
         else:
-            # Position top-right, below GNOME top bar
             x = self._mon_x + self._mon_w - self._win_w - 8
             y = self._mon_y + 32
             self.move(x, y)
@@ -148,4 +145,3 @@ class TrayWindow(Gtk.Window):
             else:
                 self.show()
             self.move(x, y)
-            self.present()

@@ -2,11 +2,12 @@
 import os
 import sys
 import signal
-import warnings
-warnings.filterwarnings('ignore', message='.*StatusIcon.*deprecated.*')
+os.environ['GDK_BACKEND'] = 'x11'
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, GLib, GdkPixbuf
+gi.require_version('AyatanaAppIndicator3', '0.1')
+from gi.repository import Gtk, GLib
+from gi.repository import AyatanaAppIndicator3 as AppIndicator
 
 from window import TrayWindow
 from config import load_config, save_config
@@ -37,11 +38,24 @@ def main():
     token_getter = lambda: get_id_token(config)
     window = TrayWindow(token_getter=token_getter)
 
-    icon = Gtk.StatusIcon()
-    icon.set_from_file(ICON_PATH)
-    icon.set_tooltip_text('BalanceTracker')
-    icon.set_visible(True)
-    icon.connect('activate', lambda _: window.toggle())
+    indicator = AppIndicator.Indicator.new(
+        'balancetracker-tray',
+        os.path.abspath(ICON_PATH),
+        AppIndicator.IndicatorCategory.APPLICATION_STATUS,
+    )
+    indicator.set_status(AppIndicator.IndicatorStatus.ACTIVE)
+
+    menu = Gtk.Menu()
+    toggle_item = Gtk.MenuItem(label='Toggle Panel')
+    toggle_item.connect('activate', lambda _: window.toggle())
+    menu.append(toggle_item)
+    sep = Gtk.SeparatorMenuItem()
+    menu.append(sep)
+    quit_item = Gtk.MenuItem(label='Quit')
+    quit_item.connect('activate', lambda _: Gtk.main_quit())
+    menu.append(quit_item)
+    menu.show_all()
+    indicator.set_menu(menu)
 
     Gtk.main()
 
