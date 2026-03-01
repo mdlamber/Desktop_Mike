@@ -35,12 +35,16 @@ class TrayWindow(Gtk.Window):
         self._mon_y = geom.y
         self._mon_w = geom.width
         self._mon_h = geom.height
-        w = self._mon_w // 4
+        w = self._mon_w // 8
         h = self._mon_h // 2
         self._win_w = w
         self._win_h = h
         self.set_default_size(w, h)
         self.set_resizable(False)
+        geom_hints = Gdk.Geometry()
+        geom_hints.max_width = w
+        geom_hints.max_height = h
+        self.set_geometry_hints(None, geom_hints, Gdk.WindowHints.MAX_SIZE)
         self.set_decorated(False)
         self.set_skip_taskbar_hint(True)
         self.set_skip_pager_hint(True)
