@@ -46,6 +46,8 @@ class TasksPanel(Gtk.Box):
         # Error label (hidden by default)
         self.error_label = Gtk.Label(label='')
         self.error_label.get_style_context().add_class('error-bar')
+        self.error_label.set_line_wrap(True)
+        self.error_label.set_max_width_chars(40)
         self.error_label.set_no_show_all(True)
         self.pack_start(self.error_label, False, False, 0)
 
@@ -115,7 +117,9 @@ class TasksPanel(Gtk.Box):
         self.new_description.set_text('')
         self.new_notes.set_text('')
         self.new_status.set_active(0)
+        self.create_form.set_no_show_all(False)
         self.create_form.show_all()
+        self.create_form.set_no_show_all(True)
 
     def _do_create(self, _):
         subject = self.new_subject.get_text().strip()
